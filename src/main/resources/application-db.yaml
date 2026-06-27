@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -16,4 +16,7 @@ spring:
 
 
   liquibase:
-    enabled: false #this will change to true for using liqubase
+    enabled: true
+    change-log: db/changelog/db.changelog-master.yaml
+    default-schema: bootbank_loan_db
+    liquibase-schema: public
