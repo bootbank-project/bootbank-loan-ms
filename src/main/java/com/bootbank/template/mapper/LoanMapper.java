@@ -8,7 +8,7 @@ public class LoanMapper {
 
     public static LoanResponseDto mapEntityToResponse(LoanEntity loan) {
         return new LoanResponseDto(
-                loan.getCif(),
+                loan.getId(),
                 loan.getName(),
                 loan.getType(),
                 loan.getAmount(),

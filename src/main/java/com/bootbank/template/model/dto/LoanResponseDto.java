@@ -7,7 +7,7 @@ import com.bootbank.template.model.enums.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record LoanResponseDto(String cif,
+public record LoanResponseDto(Long id,
                               String name,
                               Type type,
                               BigDecimal amount,
