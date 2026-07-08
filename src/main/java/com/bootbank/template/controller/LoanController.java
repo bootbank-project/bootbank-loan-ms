@@ -17,8 +17,8 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    @GetMapping("/customer/{cif}")
-    public List<LoanResponseDto> getCustomerLoans(@PathVariable String cif) {
+    @GetMapping("/customer")
+    public List<LoanResponseDto> getCustomerLoans(@RequestHeader("cif") String cif) {
         return loanService.getCustomerLoans(cif);
     }
 
