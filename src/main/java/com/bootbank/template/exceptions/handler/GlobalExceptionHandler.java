@@ -1,21 +1,21 @@
 package com.bootbank.template.exceptions.handler;
 
-import com.bootbank.template.exceptions.exception.LoanNotFoundException;
+import com.bootbank.template.exceptions.exception.RecordNotFoundException;
 import com.bootbank.template.exceptions.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @ControllerAdvice
-public class LoanExceptionHandler {
+public class GlobalExceptionHandler {
 
-    @ExceptionHandler(LoanNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleLoanNotFoundException(LoanNotFoundException exception) {
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleLoanNotFoundException(RecordNotFoundException exception) {
         ErrorResponse error = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.name(),
                 exception.getLocalizedMessage()

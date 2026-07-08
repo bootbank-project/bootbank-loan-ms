@@ -1,8 +1,8 @@
 package com.bootbank.template.exceptions.exception;
 
-public class LoanNotFoundException extends RuntimeException{
+public class RecordNotFoundException extends RuntimeException{
 
-    public LoanNotFoundException(String message) {
+    public RecordNotFoundException(String message) {
         super(message);
     }
 }

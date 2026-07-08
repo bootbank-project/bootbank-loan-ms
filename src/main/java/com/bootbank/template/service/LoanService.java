@@ -1,6 +1,6 @@
 package com.bootbank.template.service;
 
-import com.bootbank.template.exceptions.exception.LoanNotFoundException;
+import com.bootbank.template.exceptions.exception.RecordNotFoundException;
 import com.bootbank.template.mapper.LoanMapper;
 import com.bootbank.template.model.dto.LoanResponseDto;
 import com.bootbank.template.model.entity.LoanEntity;
@@ -21,7 +21,7 @@ public class LoanService {
         List<LoanEntity> loans = loanRepository.findByCif(cif);
 
         if(loans.isEmpty()) {
-            throw new LoanNotFoundException("Loan not found for Customer ID: "+cif);
+            throw new RecordNotFoundException("Loan not found for Customer ID: "+cif);
         }
 
         return loans.stream().map(LoanMapper::mapEntityToResponse).toList();
