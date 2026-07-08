@@ -89,4 +89,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
-
+  - changeSet:
+     id: addIndex-loans-cif
+     author: saadat
+     changes:
+       - createIndex:
+           indexName: idx_loans_cif
+           tableName: loans
+           schemaName: bootbank_loan_db
+           columns:
+             - column:
+                 name: CIF
