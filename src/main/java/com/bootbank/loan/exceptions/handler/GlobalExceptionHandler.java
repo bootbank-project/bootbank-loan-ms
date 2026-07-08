@@ -1,12 +1,11 @@
-package com.bootbank.template.exceptions.handler;
+package com.bootbank.loan.exceptions.handler;
 
-import com.bootbank.template.exceptions.exception.RecordNotFoundException;
-import com.bootbank.template.exceptions.response.ErrorResponse;
+import com.bootbank.loan.exceptions.exception.RecordNotFoundException;
+import com.bootbank.loan.exceptions.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import java.time.Instant;
 
 @ControllerAdvice

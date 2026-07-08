@@ -1,9 +1,8 @@
-package com.bootbank.template.repository;
+package com.bootbank.loan.repository;
 
-import com.bootbank.template.model.entity.LoanEntity;
+import com.bootbank.loan.model.entity.LoanEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository

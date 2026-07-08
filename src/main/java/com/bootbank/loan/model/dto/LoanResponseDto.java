@@ -1,8 +1,8 @@
-package com.bootbank.template.model.dto;
+package com.bootbank.loan.model.dto;
 
-import com.bootbank.template.model.enums.Currency;
-import com.bootbank.template.model.enums.Status;
-import com.bootbank.template.model.enums.Type;
+import com.bootbank.loan.model.enums.Currency;
+import com.bootbank.loan.model.enums.Status;
+import com.bootbank.loan.model.enums.Type;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +20,5 @@ public record LoanResponseDto(Long id,
                               BigDecimal remaining,
                               BigDecimal totalPaid,
                               Integer paymentsLeft,
-                              LocalDate nextPaymentDate)
-{
+                              LocalDate nextPaymentDate) {
 }

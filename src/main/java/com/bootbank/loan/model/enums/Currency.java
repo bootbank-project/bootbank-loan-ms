@@ -1,4 +1,4 @@
-package com.bootbank.template.model.enums;
+package com.bootbank.loan.model.enums;
 
 public enum Currency {
     AZN,

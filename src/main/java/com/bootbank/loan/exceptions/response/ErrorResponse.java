@@ -1,4 +1,4 @@
-package com.bootbank.template.exceptions.response;
+package com.bootbank.loan.exceptions.response;
 
 import java.time.Instant;
 

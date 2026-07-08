@@ -1,10 +1,9 @@
-package com.bootbank.template.controller;
+package com.bootbank.loan.controller;
 
 
-import com.bootbank.template.model.dto.LoanResponseDto;
-import com.bootbank.template.service.LoanService;
+import com.bootbank.loan.model.dto.LoanResponseDto;
+import com.bootbank.loan.service.LoanService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

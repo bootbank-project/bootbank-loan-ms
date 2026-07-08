@@ -1,11 +1,10 @@
-package com.bootbank.template.model.entity;
+package com.bootbank.loan.model.entity;
 
-import com.bootbank.template.model.enums.Currency;
-import com.bootbank.template.model.enums.Status;
-import com.bootbank.template.model.enums.Type;
+import com.bootbank.loan.model.enums.Currency;
+import com.bootbank.loan.model.enums.Status;
+import com.bootbank.loan.model.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
