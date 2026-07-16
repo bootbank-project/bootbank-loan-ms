@@ -6,21 +6,22 @@ import com.bootbank.loan.model.entity.LoanEntity;
 public class LoanMapper {
 
     public static LoanResponseDto mapEntityToResponse(LoanEntity loan) {
-        return new LoanResponseDto(
-                loan.getId(),
-                loan.getName(),
-                loan.getType(),
-                loan.getAmount(),
-                loan.getRate(),
-                loan.getMonthlyPayment(),
-                loan.getCurrency(),
-                loan.getStartDate(),
-                loan.getEndDate(),
-                loan.getStatus(),
-                loan.getRemaining(),
-                loan.getTotalPaid(),
-                loan.getPaymentsLeft(),
-                loan.getNextPaymentDate()
-        );
+
+        return LoanResponseDto.builder()
+                .id(loan.getId())
+                .name(loan.getName())
+                .type(loan.getType())
+                .amount(loan.getAmount())
+                .rate(loan.getRate())
+                .monthlyPayment(loan.getMonthlyPayment())
+                .currency(loan.getCurrency())
+                .startDate(loan.getStartDate())
+                .endDate(loan.getEndDate())
+                .status(loan.getStatus())
+                .remaining(loan.getRemaining())
+                .totalPaid(loan.getTotalPaid())
+                .paymentsLeft(loan.getPaymentsLeft())
+                .nextPaymentDate(loan.getNextPaymentDate())
+                .build();
     }
 }
