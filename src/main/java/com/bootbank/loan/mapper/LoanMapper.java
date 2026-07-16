@@ -1,13 +1,14 @@
 package com.bootbank.loan.mapper;
 
+import com.bootbank.loan.model.dto.LoanDto;
 import com.bootbank.loan.model.dto.LoanResponseDto;
 import com.bootbank.loan.model.entity.LoanEntity;
 
 public class LoanMapper {
 
-    public static LoanResponseDto mapEntityToResponse(LoanEntity loan) {
+    public static LoanDto mapEntityToResponse(LoanEntity loan) {
 
-        return LoanResponseDto.builder()
+        return LoanDto.builder()
                 .id(loan.getId())
                 .name(loan.getName())
                 .type(loan.getType())
