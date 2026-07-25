@@ -1,0 +1,93 @@
+databaseChangeLog:
+  - logicalFilePath: 02-create-table-loan-payment-schedule.yaml
+  - changeSet:
+      id: 01
+      author: Rafael
+      changes:
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS bootbank_loan_db
+        - createSequence:
+            schemaName: bootbank_loan_db
+            sequenceName: LOAN_PAYMENT_SCHEDULE_SEQ
+            startValue: 1
+            incrementBy: 1
+
+  - changeSet:
+      id: 02
+      author: Rafael
+      changes:
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS bootbank_loan_db
+        - createTable:
+            schemaName: bootbank_loan_db
+            tableName: LOAN_PAYMENT_SCHEDULE
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: LOAN_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_schedule_loan_id
+                    referencedTableSchemaName: bootbank_loan_db
+                    referencedTableName: LOAN
+                    referencedColumnNames: ID
+                    deleteCascade: true
+              - column:
+                  name: MONTH_NUMBER
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PAYMENT_DATE
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MONTHLY_PAYMENT
+                  type: NUMERIC(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PRINCIPAL_AMOUNT
+                  type: NUMERIC(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: INTEREST_AMOUNT
+                  type: NUMERIC(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: REMAINING_BALANCE
+                  type: NUMERIC(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STATUS
+                  type: VARCHAR(50)
+                  defaultValue: UNPAID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PAID_DATE
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

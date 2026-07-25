@@ -1,20 +1,38 @@
 package com.bootbank.loan.service.impl;
 
+import com.bootbank.loan.exceptions.exception.InvalidRequestException;
 import com.bootbank.loan.exceptions.exception.RecordNotFoundException;
 import com.bootbank.loan.mapper.LoanMapper;
+import com.bootbank.loan.model.dto.LoanApplyRequestDto;
+import com.bootbank.loan.model.dto.LoanDto;
 import com.bootbank.loan.model.dto.LoanResponseDto;
 import com.bootbank.loan.model.entity.LoanEntity;
+import com.bootbank.loan.model.entity.LoanPaymentScheduleEntity;
+import com.bootbank.loan.model.enums.Currency;
+import com.bootbank.loan.model.enums.Status;
+import com.bootbank.loan.model.enums.Type;
+import com.bootbank.loan.repository.LoanPaymentScheduleRepository;
 import com.bootbank.loan.repository.LoanRepository;
 import com.bootbank.loan.service.LoanService;
-import java.util.List;
+import com.bootbank.loan.util.LoanCalculator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class LoanServiceImpl implements LoanService {
-    private final LoanRepository loanRepository;
 
-    public LoanServiceImpl(LoanRepository loanRepository) {
+    private final LoanRepository loanRepository;
+    private final LoanPaymentScheduleRepository loanPaymentScheduleRepository;
+
+    public LoanServiceImpl(LoanRepository loanRepository,
+                           LoanPaymentScheduleRepository loanPaymentScheduleRepository) {
         this.loanRepository = loanRepository;
+        this.loanPaymentScheduleRepository = loanPaymentScheduleRepository;
     }
 
     public LoanResponseDto getCustomerLoans(String cif) {
@@ -30,4 +48,79 @@ public class LoanServiceImpl implements LoanService {
                 .build();
     }
 
+    @Override
+    @Transactional
+    public LoanDto applyLoan(String cif, LoanApplyRequestDto request) {
+
+        Type type;
+        try {
+            type = Type.valueOf(request.loanType().toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            throw new InvalidRequestException("Kredit növü düzgün deyil: " + request.loanType());
+        }
+
+        BigDecimal annualRate = type.getAnnualRate();
+        BigDecimal monthlyRate = LoanCalculator.calculateMonthlyRate(annualRate);
+        BigDecimal monthlyPayment = LoanCalculator.calculateMonthlyPayment(
+                request.amount(), monthlyRate, request.term());
+
+        LocalDate today = LocalDate.now();
+
+        LoanEntity loan = LoanEntity.builder()
+                .cif(cif)
+                .name(type.getDisplayName())
+                .type(type)
+                .amount(request.amount())
+                .rate(annualRate)
+                .monthlyPayment(monthlyPayment)
+                .currency(Currency.AZN)
+                .startDate(today)
+                .endDate(today.plusMonths(request.term()))
+                .status(Status.ACTIVE)
+                .remaining(request.amount())
+                .totalPaid(BigDecimal.ZERO)
+                .paymentsLeft(request.term())
+                .nextPaymentDate(today.plusMonths(1))
+                .build();
+
+        LoanEntity savedLoan = loanRepository.save(loan);
+
+        List<LoanPaymentScheduleEntity> schedule = buildPaymentSchedule(
+                savedLoan.getId(), request.amount(), monthlyRate, monthlyPayment, request.term(), today);
+        loanPaymentScheduleRepository.saveAll(schedule);
+
+        return LoanMapper.mapEntityToResponse(savedLoan);
+    }
+
+    private List<LoanPaymentScheduleEntity> buildPaymentSchedule(Long loanId,
+                                                                 BigDecimal principal,
+                                                                 BigDecimal monthlyRate,
+                                                                 BigDecimal monthlyPayment,
+                                                                 int termMonths,
+                                                                 LocalDate startDate) {
+
+        List<LoanPaymentScheduleEntity> schedule = new ArrayList<>();
+        BigDecimal remainingBalance = principal;
+
+        for (int month = 1; month <= termMonths; month++) {
+            BigDecimal interestAmount = LoanCalculator.calculateInterestForMonth(remainingBalance, monthlyRate);
+            BigDecimal principalAmount = monthlyPayment.subtract(interestAmount);
+            remainingBalance = LoanCalculator.subtractAndRound(remainingBalance, principalAmount);
+
+            LoanPaymentScheduleEntity row = LoanPaymentScheduleEntity.builder()
+                    .loanId(loanId)
+                    .monthNumber(month)
+                    .paymentDate(startDate.plusMonths(month))
+                    .monthlyPayment(monthlyPayment)
+                    .principalAmount(principalAmount)
+                    .interestAmount(interestAmount)
+                    .remainingBalance(remainingBalance)
+                    .status("UNPAID")
+                    .build();
+
+            schedule.add(row);
+        }
+
+        return schedule;
+    }
 }
