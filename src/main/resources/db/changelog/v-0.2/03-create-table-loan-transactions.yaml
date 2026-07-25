@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - logicalFilePath: 03-create-table-loan-transactions.yaml
+  - changeSet:
+      id: 01
+      author: Rafael
+      changes:
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS bootbank_loan_db
+        - createSequence:
+            schemaName: bootbank_loan_db
+            sequenceName: LOAN_TRANSACTIONS_SEQ
+            startValue: 1
+            incrementBy: 1
+
+  - changeSet:
+      id: 02
+      author: Rafael
+      changes:
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS bootbank_loan_db
+        - createTable:
+            schemaName: bootbank_loan_db
+            tableName: LOAN_TRANSACTIONS
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: LOAN_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_transaction_loan_id
+                    referencedTableSchemaName: bootbank_loan_db
+                    referencedTableName: LOAN
+                    referencedColumnNames: ID
+              - column:
+                  name: SCHEDULE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_transaction_schedule_id
+                    referencedTableSchemaName: bootbank_loan_db
+                    referencedTableName: LOAN_PAYMENT_SCHEDULE
+                    referencedColumnNames: ID
+              - column:
+                  name: CIF
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: AMOUNT
+                  type: NUMERIC(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PRINCIPAL_PAID
+                  type: NUMERIC(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: INTEREST_PAID
+                  type: NUMERIC(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TRANSACTION_DATE
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
