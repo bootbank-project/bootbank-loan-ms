@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,7 +116,7 @@ public class LoanServiceImpl implements LoanService {
                 .type(loan.getType())
                 .amount(loan.getAmount())
                 .rate(loan.getRate())
-                .term(schedule.size())
+                .term((int) ChronoUnit.MONTHS.between(loan.getStartDate(), loan.getEndDate()))
                 .monthlyPayment(loan.getMonthlyPayment())
                 .currency(loan.getCurrency())
                 .schedule(schedule)
