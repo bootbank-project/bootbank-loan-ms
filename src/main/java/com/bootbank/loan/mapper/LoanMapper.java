@@ -1,8 +1,10 @@
 package com.bootbank.loan.mapper;
 
 import com.bootbank.loan.model.dto.LoanDto;
+import com.bootbank.loan.model.dto.LoanPaymentScheduleDto;
 import com.bootbank.loan.model.dto.LoanResponseDto;
 import com.bootbank.loan.model.entity.LoanEntity;
+import com.bootbank.loan.model.entity.LoanPaymentScheduleEntity;
 
 public class LoanMapper {
 
@@ -23,6 +25,19 @@ public class LoanMapper {
                 .totalPaid(loan.getTotalPaid())
                 .paymentsLeft(loan.getPaymentsLeft())
                 .nextPaymentDate(loan.getNextPaymentDate())
+                .build();
+    }
+
+    public static LoanPaymentScheduleDto mapScheduleEntityToResponse(LoanPaymentScheduleEntity schedule) {
+
+        return LoanPaymentScheduleDto.builder()
+                .month(schedule.getMonthNumber())
+                .paymentDate(schedule.getPaymentDate())
+                .payment(schedule.getMonthlyPayment())
+                .principal(schedule.getPrincipalAmount())
+                .interest(schedule.getInterestAmount())
+                .balance(schedule.getRemainingBalance())
+                .status(schedule.getStatus())
                 .build();
     }
 }

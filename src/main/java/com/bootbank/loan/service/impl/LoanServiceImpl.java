@@ -5,6 +5,7 @@ import com.bootbank.loan.exceptions.exception.RecordNotFoundException;
 import com.bootbank.loan.mapper.LoanMapper;
 import com.bootbank.loan.model.dto.LoanApplyRequestDto;
 import com.bootbank.loan.model.dto.LoanDto;
+import com.bootbank.loan.model.dto.LoanPaymentScheduleResponseDto;
 import com.bootbank.loan.model.dto.LoanResponseDto;
 import com.bootbank.loan.model.entity.LoanEntity;
 import com.bootbank.loan.model.entity.LoanPaymentScheduleEntity;
@@ -90,6 +91,35 @@ public class LoanServiceImpl implements LoanService {
         loanPaymentScheduleRepository.saveAll(schedule);
 
         return LoanMapper.mapEntityToResponse(savedLoan);
+    }
+
+    @Override
+    public LoanPaymentScheduleResponseDto getPaymentSchedule(String cif, Long loanId) {
+        LoanEntity loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RecordNotFoundException("Loan not found: " + loanId));
+
+        if (!cif.equals(loan.getCif())) {
+            throw new RecordNotFoundException("Loan not found for Customer ID: " + cif);
+        }
+
+        List<LoanPaymentScheduleEntity> scheduleEntities =
+                loanPaymentScheduleRepository.findByLoanIdOrderByMonthNumberAsc(loanId);
+
+        var schedule = scheduleEntities.stream()
+                .map(LoanMapper::mapScheduleEntityToResponse)
+                .toList();
+
+        return LoanPaymentScheduleResponseDto.builder()
+                .id(loan.getId())
+                .name(loan.getName())
+                .type(loan.getType())
+                .amount(loan.getAmount())
+                .rate(loan.getRate())
+                .term(schedule.size())
+                .monthlyPayment(loan.getMonthlyPayment())
+                .currency(loan.getCurrency())
+                .schedule(schedule)
+                .build();
     }
 
     private List<LoanPaymentScheduleEntity> buildPaymentSchedule(Long loanId,
