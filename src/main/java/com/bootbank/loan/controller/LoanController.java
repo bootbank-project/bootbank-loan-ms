@@ -2,6 +2,7 @@ package com.bootbank.loan.controller;
 
 import com.bootbank.loan.model.dto.LoanApplyRequestDto;
 import com.bootbank.loan.model.dto.LoanDto;
+import com.bootbank.loan.model.dto.LoanPaymentScheduleResponseDto;
 import com.bootbank.loan.model.dto.LoanResponseDto;
 import com.bootbank.loan.service.LoanService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,13 @@ public class LoanController {
                                              @Valid @RequestBody LoanApplyRequestDto request) {
         LoanDto createdLoan = loanService.applyLoan(cif, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdLoan);
+    }
+
+    @Operation(summary = "Get the full payment schedule for a loan belonging to the authenticated customer")
+    @GetMapping("/{id}/payment-schedule")
+    public ResponseEntity<LoanPaymentScheduleResponseDto> getPaymentSchedule(@RequestHeader("X-CIF") String cif,
+                                                                             @PathVariable Long id) {
+        return ResponseEntity.ok(loanService.getPaymentSchedule(cif, id));
     }
 
 }
