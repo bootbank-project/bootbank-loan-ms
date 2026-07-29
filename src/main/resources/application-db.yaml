@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bootbank_loan_db?currentSchema=bootbank_loan_db
+    username: bootbank_loan
+    password: dev12345
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+        default_schema: bootbank_loan_db
+
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog-master.yaml
+    default-schema: bootbank_loan_db
+    drop-first: false
