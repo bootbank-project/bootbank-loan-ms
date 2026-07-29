@@ -39,5 +39,14 @@ public class LoanController {
                                                                              @PathVariable Long id) {
         return ResponseEntity.ok(loanService.getPaymentSchedule(cif, id));
     }
+@Operation(summary = "Make payment for a customer loan")
+@PostMapping("/{id}/pay")
+public ResponseEntity<LoanDto> payLoan(
+        @RequestHeader("X-CIF") String cif,
+        @PathVariable Long id,
+        @Valid @RequestBody PaymentRequestDto request) {
 
+    LoanDto loan = loanService.payLoan(cif, id, request);
+    return ResponseEntity.ok(loan);
+}
 }
