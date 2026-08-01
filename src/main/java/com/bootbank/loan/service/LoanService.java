@@ -13,4 +13,6 @@ public interface LoanService {
 
     LoanPaymentScheduleResponseDto getPaymentSchedule(String cif, Long loanId);
 
+    LoanDto getLoan(String cif, Long loanId);
+
 }

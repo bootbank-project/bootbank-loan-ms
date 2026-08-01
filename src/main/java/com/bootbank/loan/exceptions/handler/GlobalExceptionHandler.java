@@ -1,6 +1,7 @@
 package com.bootbank.loan.exceptions.handler;
 
 import com.bootbank.loan.exceptions.exception.InvalidRequestException;
+import com.bootbank.loan.exceptions.exception.RecordMismatchException;
 import com.bootbank.loan.exceptions.exception.RecordNotFoundException;
 import com.bootbank.loan.exceptions.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -66,5 +67,17 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RecordMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleRecordMismatchException(RecordMismatchException exception) {
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.name(),
+                exception.getLocalizedMessage()
+        );
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

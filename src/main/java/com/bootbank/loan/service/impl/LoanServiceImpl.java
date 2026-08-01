@@ -1,6 +1,7 @@
 package com.bootbank.loan.service.impl;
 
 import com.bootbank.loan.exceptions.exception.InvalidRequestException;
+import com.bootbank.loan.exceptions.exception.RecordMismatchException;
 import com.bootbank.loan.exceptions.exception.RecordNotFoundException;
 import com.bootbank.loan.mapper.LoanMapper;
 import com.bootbank.loan.model.dto.LoanApplyRequestDto;
@@ -41,7 +42,7 @@ public class LoanServiceImpl implements LoanService {
         List<LoanEntity> loans = loanRepository.findByCif(cif);
 
         if (loans.isEmpty()) {
-            throw new RecordNotFoundException("Loan not found for Customer ID: " + cif);
+            throw new RecordNotFoundException("Kredit məlumatı tapılmadı.");
         }
 
         var loanDtos = loans.stream().map(LoanMapper::mapEntityToResponse).toList();
@@ -121,6 +122,18 @@ public class LoanServiceImpl implements LoanService {
                 .currency(loan.getCurrency())
                 .schedule(schedule)
                 .build();
+    }
+
+    @Override
+    public LoanDto getLoan(String cif, Long loanId) {
+        LoanEntity loanEntity = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RecordNotFoundException("Kredit məlumatı tapılmadı : " + loanId));
+
+        if(!cif.equals(loanEntity.getCif())) {
+            throw new RecordMismatchException("Kredit məlumatı tapılmadı və ya bu müştəriyə aid deyil.");
+        }
+
+        return LoanMapper.mapEntityToResponse(loanEntity);
     }
 
     private List<LoanPaymentScheduleEntity> buildPaymentSchedule(Long loanId,

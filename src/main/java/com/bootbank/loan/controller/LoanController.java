@@ -20,8 +20,9 @@ public class LoanController {
 
     private final LoanService loanService;
 
-    @GetMapping("/customer")
-    public ResponseEntity<LoanResponseDto> getCustomerLoans(@RequestHeader("cif") String cif) {
+    @Operation(summary = "Retrieve all loans for a customer")
+    @GetMapping()
+    public ResponseEntity<LoanResponseDto> getCustomerLoans(@RequestHeader("X-CIF") String cif) {
         return ResponseEntity.ok(loanService.getCustomerLoans(cif));
     }
 
@@ -38,6 +39,13 @@ public class LoanController {
     public ResponseEntity<LoanPaymentScheduleResponseDto> getPaymentSchedule(@RequestHeader("X-CIF") String cif,
                                                                              @PathVariable Long id) {
         return ResponseEntity.ok(loanService.getPaymentSchedule(cif, id));
+    }
+
+    @Operation(summary = "Get loan details by ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<LoanDto> getLoan(@RequestHeader("X-CIF") String cif,
+                                           @PathVariable Long id) {
+        return ResponseEntity.ok(loanService.getLoan(cif, id));
     }
 
 }
